@@ -1,0 +1,11 @@
+debug: False
+influxdb:
+  host: localhost
+  database: darter
+  port: 8086
+  user: root
+  pass: root
+redis:
+  host: localhost
+  port: 6379
+  queue: default

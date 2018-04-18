@@ -1,0 +1,62 @@
+
+from setuptools import setup
+
+
+def readme():
+    with open('README.md') as f:
+        return f.read()
+
+
+setup(name='openstack-darter',
+        version='0.0.1.dev1',
+        description=readme(),
+        keywords='openstack capacity monitoring',
+        url='',
+        author='Marcus Floriano',
+        author_email='marcus.floriano@gmail.com',
+        license='MIT',
+        packages=['darter'],
+        platforms=[],
+        python_requires='>=3',
+        install_requires=[
+            "click==6",
+            "openstacksdk==0.10.0",
+            "terminaltables==3.1.0",
+            "influxdb==5.0.0",
+            "redis==2.10.6",
+            "rq==0.10.0"
+        ],
+        setup_requires=['pytest-runner'],
+        tests_require=['pytest', 'pylint'],
+        classifiers=[
+            # Documents for packaging python softwares
+            # https://packaging.python.org/tutorials/distributing-packages/
+            # https://pypi.python.org/pypi?%3Aaction=list_classifiers
+
+            # How mature is this project? Common values are
+            #   3 - Alpha
+            #   4 - Beta
+            #   5 - Production/Stable
+            'Development Status :: 3 - Alpha',
+
+            'Environment :: OpenStack',
+
+            # Indicate who your project is intended for
+            'Intended Audience :: System Administrators',
+            'Topic :: System :: Systems Administration',
+
+            # Pick your license as you wish (should match "license" above)
+            'License :: OSI Approved :: MIT License',
+
+            # Specify the Python versions you support here. In particular, ensure
+            # that you indicate whether you support Python 2, Python 3 or both.
+            'Programming Language :: Python :: 3 :: Only',
+            'Programming Language :: Python :: 3.5',
+
+            'Operating System :: POSIX :: Linux'
+        ],
+        entry_points = {
+            'console_scripts': ['openstack-darter=darter:cli'],
+        },
+        include_package_data=True,
+        zip_safe=False)
