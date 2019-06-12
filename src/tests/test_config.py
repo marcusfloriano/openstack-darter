@@ -1,5 +1,5 @@
 
-from src.darter import DarterConfig
+from darter import DarterConfig
 
 
 def test_load():

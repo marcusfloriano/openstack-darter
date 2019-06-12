@@ -1,6 +1,6 @@
 
 
-from src.darter import Openstack
+from darter.openstack import Openstack
 
 
 def test_domain():

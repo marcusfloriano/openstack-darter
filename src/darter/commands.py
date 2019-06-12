@@ -16,7 +16,7 @@ def commands():
 @commands.command()
 @click.pass_obj
 def totals(config):
-    '''Processing total of Domains and Projects'''
+    """Processing total of Domains and Projects"""
 
     redis_config = config.get("redis")
     pool = ConnectionPool(host=redis_config["host"])

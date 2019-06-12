@@ -5,3 +5,5 @@ __pycache__
 openstack_darter.egg-info
 clouds.yaml
 darter.yaml
+docs/_build
+.eggs

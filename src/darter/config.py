@@ -32,7 +32,7 @@ class DarterConfig:
         if key in self.darter_config:
             return self.darter_config[key]
         else:
-            raise KeyError("Key for % config not exists" % self.config_filename)
+            print("Key for %s config not exists" % self.config_filename)
 
     def _load(self):
         for path in self.filelist:

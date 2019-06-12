@@ -1,4 +1,6 @@
 debug: False
+darter:
+  datafiles: /tmp/darter
 influxdb:
   host: localhost
   database: darter
