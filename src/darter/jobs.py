@@ -1,6 +1,6 @@
 
-from darter.config import DarterConfig
-from darter.openstack import Openstack
+from darter import DarterConfig
+from darter import Openstack
 
 from influxdb import InfluxDBClient
 from redis import Redis, ConnectionPool

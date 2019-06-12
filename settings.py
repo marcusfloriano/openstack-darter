@@ -1,5 +1,5 @@
 
-from darter.config import DarterConfig
+from darter import DarterConfig
 
 config = DarterConfig().get("redis")
 

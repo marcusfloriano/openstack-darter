@@ -1,5 +1,5 @@
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def readme():
@@ -8,27 +8,28 @@ def readme():
 
 
 setup(name='openstack-darter',
-        version='0.0.1.dev1',
-        description=readme(),
-        keywords='openstack capacity monitoring',
-        url='',
-        author='Marcus Floriano',
-        author_email='marcus.floriano@gmail.com',
-        license='MIT',
-        packages=['darter'],
-        platforms=[],
-        python_requires='>=3',
-        install_requires=[
-            "click==6",
-            "openstacksdk==0.10.0",
-            "terminaltables==3.1.0",
-            "influxdb==5.0.0",
-            "redis==2.10.6",
-            "rq==0.10.0"
-        ],
-        setup_requires=['pytest-runner'],
-        tests_require=['pytest', 'pylint'],
-        classifiers=[
+      version='0.0.1.dev1',
+      description=readme(),
+      keywords='openstack capacity panel',
+      url='',
+      author='Marcus Floriano',
+      author_email='marcus.floriano@gmail.com',
+      license='MIT',
+      packages=find_packages('src'),
+      package_dir={'': 'src'},
+      platforms=[],
+      python_requires='>=3',
+      install_requires=[
+          "click==6",
+          "openstacksdk==0.10.0",
+          "terminaltables==3.1.0",
+          "influxdb==5.0.0",
+          "redis==2.10.6",
+          "rq==0.10.0"
+      ],
+      setup_requires=['pytest-runner'],
+      tests_require=['pytest', 'pylint'],
+      classifiers=[
             # Documents for packaging python softwares
             # https://packaging.python.org/tutorials/distributing-packages/
             # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -55,8 +56,8 @@ setup(name='openstack-darter',
 
             'Operating System :: POSIX :: Linux'
         ],
-        entry_points = {
+      entry_points={
             'console_scripts': ['openstack-darter=darter:cli'],
-        },
-        include_package_data=True,
-        zip_safe=False)
+      },
+      include_package_data=True,
+      zip_safe=False)
