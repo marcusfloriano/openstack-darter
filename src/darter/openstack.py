@@ -8,14 +8,14 @@ from darter.models import Domain, Project
 
 class Openstack:
 
-    def __init__(self):
-        pass
+    def __init__(self, cloud):
+        self.cloud = cloud
+        self.conn = openstack.connect(cloud=self.cloud)
 
-    def get_domains(self, cloud):
-        conn = openstack.connect(cloud=cloud)
+    def get_domains(self):
         domains = []
-        for domain in conn.identity.domains():
-            d = Domain(domain.id, domain.name, cloud)
+        for domain in self.conn.identity.domains():
+            d = Domain(domain.id, domain.name, self.cloud)
             domains.append(d.to_json())
         return domains
 

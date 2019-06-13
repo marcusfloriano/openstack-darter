@@ -1,32 +1,30 @@
 
-import logging
-
-from darter import DarterConfig
+from darter.util import DarterUtil
 from darter.openstack import Openstack
 from darter.models import JsonWriter
 
 from redis import Redis, ConnectionPool
 from rq import Queue
 
-logger = logging.getLogger(__name__)
-ch = logging.StreamHandler()
+darter_util = DarterUtil()
+darter_util.init_logger(__name__)
 
-if DarterConfig().get("debug"):
-    logger.setLevel(logging.DEBUG)
-    ch.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
-
-redis_config = DarterConfig().get("redis")
+redis_config = darter_util.get_config("redis")
 pool = ConnectionPool(host=redis_config["host"])
 queue = Queue("high", connection=Redis(connection_pool=pool))
 
 
+def domains_processing(cloud):
+    """Job for get all domains from openstack"""
+    darter_util.get_logger().debug("Start processing job_get_domains")
+    domains = Openstack(cloud).get_domains()
+    JsonWriter().items("domains", "domains", domains)
+    darter_util.get_logger().debug("End processing job_get_domains")
+
+
 def measure_total_domains_and_project(cloud):
 
-    logger.debug("measure_total_domains_and_project");
+    darter_util.get_logger().debug("measure_total_domains_and_project");
 
     os = Openstack()
     domains = os.get_domains(cloud)

@@ -21,7 +21,7 @@ class Domain:
         region (string): Name of Region
 
     """
-    def __init__(self, uuid, name, region):
+    def __init__(self, uuid=None, name=None, region=None):
         self.uuid = uuid
         self.name = name
         self.region = region
@@ -32,6 +32,11 @@ class Domain:
             'name': self.name,
             'region': self.region
         }
+
+    def from_json(self, data):
+        self.uuid = data['uuid']
+        self.name = data['name']
+        self.region = data['region']
 
 
 class Project:

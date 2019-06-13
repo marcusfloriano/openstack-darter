@@ -1,9 +1,8 @@
 
 import click
-import logging
 
 from darter.commands import commands
-from darter.config import DarterConfig
+from darter.util import DarterUtil
 
 
 @click.command(cls=click.CommandCollection, sources=[commands])
@@ -12,9 +11,7 @@ def cli(ctx):
 
     """Openstack Darter this for CLI for generate info about capacity"""
 
-    ctx.obj = DarterConfig()
-    if ctx.obj.get("debug"):
-        logging.basicConfig(level=logging.DEBUG)
+    ctx.obj = DarterUtil()
 
 
 if __name__ == '__main__':

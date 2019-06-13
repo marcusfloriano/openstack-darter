@@ -22,6 +22,12 @@ gendoc:
 copydoc:
 	sphinx-apidoc -f -o docs src
 
+worker:
+	rq worker -c settings -v
+
+rqdash:
+	rq-dashboard
+
 .PHONY: help Makefile
 
 # Catch-all target: route all unknown targets to Sphinx using the new
