@@ -1,13 +1,23 @@
 
+import logging
+
 from darter import DarterConfig
 from darter.openstack import Openstack
+from darter.models import JsonWriter
 
-from influxdb import InfluxDBClient
 from redis import Redis, ConnectionPool
 from rq import Queue
 
-influxdb_config = DarterConfig().get("influxdb")
-client = InfluxDBClient(influxdb_config["host"], influxdb_config["port"], influxdb_config["user"], influxdb_config["pass"], influxdb_config["database"])
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+
+if DarterConfig().get("debug"):
+    logger.setLevel(logging.DEBUG)
+    ch.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 redis_config = DarterConfig().get("redis")
 pool = ConnectionPool(host=redis_config["host"])
@@ -15,43 +25,48 @@ queue = Queue("high", connection=Redis(connection_pool=pool))
 
 
 def measure_total_domains_and_project(cloud):
+
+    logger.debug("measure_total_domains_and_project");
+
     os = Openstack()
     domains = os.get_domains(cloud)
 
-    client.write_points(
-        [{
-            "measurement": "total_domains",
-            "tags": {
-                "region": cloud
-            },
-            "fields": {
-                "value": len(domains)
-            }
-        }]
-    )
+    JsonWriter().items("domains", "domains", domains)
 
-    all_projects = []
-    for domain in domains:
-        projects = os.get_projects(cloud, domain)
-        for project in projects:
-            all_projects.append({
-                "domain": domain,
-                "project": project
-            })
-
-    client.write_points(
-        [{
-            "measurement": "total_projects",
-            "tags": {
-                "region": cloud
-            },
-            "fields": {
-                "value": len(all_projects)
-            }
-        }]
-    )
-
-    queue.enqueue("darter.jobs.measure_totals_compute", cloud, all_projects)
+    # client.write_points(
+    #     [{
+    #         "measurement": "total_domains",
+    #         "tags": {
+    #             "region": cloud
+    #         },
+    #         "fields": {
+    #             "value": len(domains)
+    #         }
+    #     }]
+    # )
+    #
+    # all_projects = []
+    # for domain in domains:
+    #     projects = os.get_projects(cloud, domain)
+    #     for project in projects:
+    #         all_projects.append({
+    #             "domain": domain,
+    #             "project": project
+    #         })
+    #
+    # client.write_points(
+    #     [{
+    #         "measurement": "total_projects",
+    #         "tags": {
+    #             "region": cloud
+    #         },
+    #         "fields": {
+    #             "value": len(all_projects)
+    #         }
+    #     }]
+    # )
+    #
+    # queue.enqueue("darter.jobs.measure_totals_compute", cloud, all_projects)
 
 
 def measure_totals_compute(cloud, all_projects):

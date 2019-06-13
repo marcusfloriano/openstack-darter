@@ -1,5 +1,6 @@
 import click
 import sys
+import logging
 
 from redis import Redis, ConnectionPool
 from rq import Queue
@@ -17,6 +18,7 @@ def commands():
 @click.pass_obj
 def totals(config):
     """Processing total of Domains and Projects"""
+    logging.debug("Starting executing totals")
 
     redis_config = config.get("redis")
     pool = ConnectionPool(host=redis_config["host"])

@@ -27,7 +27,7 @@ setup(name='openstack-darter',
           "redis==2.10.6",
           "rq==0.10.0"
       ],
-      setup_requires=['pytest-runner', 'sphinxcontrib-napoleon'],
+      setup_requires=['pytest-runner', 'sphinxcontrib-napoleon', 'rq-dashboard'],
       tests_require=['pytest', 'pylint'],
       classifiers=[
             # Documents for packaging python softwares

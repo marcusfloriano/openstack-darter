@@ -1,6 +1,8 @@
 
 import openstack.cloud
 
+from darter.models import Domain, Project
+
 '''This class is for calculate the measurement for items into openstack '''
 
 
@@ -13,7 +15,8 @@ class Openstack:
         conn = openstack.connect(cloud=cloud)
         domains = []
         for domain in conn.identity.domains():
-            domains.append(domain)
+            d = Domain(domain.id, domain.name, cloud)
+            domains.append(d.to_json())
         return domains
 
     def get_projects(self, cloud, domain):

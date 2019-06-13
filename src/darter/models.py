@@ -4,6 +4,11 @@
 This module contains all structs that used on Openstack-Darter.
 
 """
+import os
+import json
+
+from darter.config import DarterConfig
+from pathlib import Path
 
 
 class Domain:
@@ -21,6 +26,13 @@ class Domain:
         self.name = name
         self.region = region
 
+    def to_json(self):
+        return {
+            'uuid': self.uuid,
+            'name': self.name,
+            'region': self.region
+        }
+
 
 class Project:
 
@@ -35,3 +47,22 @@ class Project:
         self.uuid = uuid
         self.name = name
         self.domain_id = domain_id
+
+
+class JsonWriter:
+
+    """JsonWrite is to create json strutcs files"""
+
+    def __init__(self):
+        darter_config = DarterConfig().get("darter")
+        self.datafiles = darter_config['datafiles']
+        if not Path("%s" % self.datafiles).is_dir():
+            os.makedirs("%s" % self.datafiles)
+
+    def items(self, file, name, items):
+        data = {
+            'totals': len(items),
+            name: items
+        }
+        with open("%s/%s.json" % (self.datafiles, file), 'w') as file:
+            json.dump(data, file)

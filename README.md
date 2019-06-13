@@ -19,6 +19,24 @@ The metrics being measured are:
 ## Prerequisites
 
 * Admin user/password of openstack
-* Grafana for show the measured
-* InfluxDB for store the measured
 * Redis for processing jobs
+
+
+## Development Environment
+
+### Prerequisites
+
+* https://github.com/eoranged/rq-dashboard
+* Docker and Docker Compose
+
+
+### Start
+
+docker-compose up -d
+rq worker -c settings -v
+rq-dashboard
+
+
+
+
+
