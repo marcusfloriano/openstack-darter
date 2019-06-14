@@ -2,7 +2,7 @@
 import json
 
 from darter.util import DarterUtil
-from darter.openstack import Openstack
+from darter.openstack_util import OpenstackUtil
 from darter.models import JsonWriter, Domain
 
 darter_util = DarterUtil()
@@ -12,7 +12,7 @@ darter_util.init_logger(__name__)
 def get_all_domains(region):
     """Job for get all domains from openstack"""
     darter_util.get_logger().debug("Start processing job_get_domains")
-    domains = Openstack(region).get_domains()
+    domains = OpenstackUtil(region).get_domains()
     darter_util.get_logger().debug("Region: %s" % region)
     darter_util.get_logger().debug("Domains total: %s" % len(domains))
     JsonWriter().items("domains", "domains", domains)
@@ -35,7 +35,7 @@ def get_projects_by_domain(region: str, domain: Domain):
     darter_util.get_logger().debug("Start processing get_projects_by_domain")
     darter_util.get_logger().debug("Region: %s" % region)
     darter_util.get_logger().debug(domain.to_json())
-    projects = Openstack(region).get_projects(domain.uuid)
+    projects = OpenstackUtil(region).get_projects(domain.uuid)
     JsonWriter("domain").items("%s" % domain.uuid, "projects", projects)
     darter_util.get_logger().debug("End processing get_projects_by_domain")
 
@@ -44,7 +44,7 @@ def measure_total_domains_and_project(cloud):
 
     darter_util.get_logger().debug("measure_total_domains_and_project");
 
-    os = Openstack()
+    os = OpenstackUtil()
     domains = os.get_domains(cloud)
 
     JsonWriter().items("domains", "domains", domains)
@@ -96,7 +96,7 @@ def measure_totals_compute(cloud, all_projects):
         "max_total_ram_size": 0
     }
 
-    os = Openstack()
+    os = OpenstackUtil()
 
     for project in all_projects:
         totals = os.get_compute_totals(cloud, project["project"])
