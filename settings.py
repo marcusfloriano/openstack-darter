@@ -1,7 +1,7 @@
 
-from darter import DarterConfig
+from darter import DarterUtil
 
-config = DarterConfig().get("redis")
+config = DarterUtil().get_config("redis")
 
 REDIS_URL = "redis://%s:%s/%s" % (config["host"], config["port"], config["queue"])
 

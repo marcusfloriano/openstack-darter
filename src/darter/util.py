@@ -3,6 +3,9 @@ import os
 import yaml
 import logging
 
+from redis import Redis, ConnectionPool
+from rq import Queue
+
 UNIX_CONFIG_HOME = os.path.join(os.path.expanduser(os.path.join('~', '.config')), 'darter')
 UNIX_SITE_CONFIG_HOME = '/etc/darter'
 
@@ -57,3 +60,10 @@ class DarterUtil:
 
     def get_logger(self):
         return self.logger
+
+    def get_redis_queue(self):
+        redis_config = self.get_config("redis")
+        pool = ConnectionPool(host=redis_config["host"])
+        queue = Queue("high", connection=Redis(connection_pool=pool))
+        return queue
+

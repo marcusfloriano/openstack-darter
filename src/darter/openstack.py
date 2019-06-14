@@ -8,22 +8,22 @@ from darter.models import Domain, Project
 
 class Openstack:
 
-    def __init__(self, cloud):
-        self.cloud = cloud
-        self.conn = openstack.connect(cloud=self.cloud)
+    def __init__(self, region):
+        self.region = region
+        self.conn = openstack.connect(cloud=self.region)
 
     def get_domains(self):
         domains = []
         for domain in self.conn.identity.domains():
-            d = Domain(domain.id, domain.name, self.cloud)
+            d = Domain(domain.id, domain.name, self.region)
             domains.append(d.to_json())
         return domains
 
-    def get_projects(self, cloud, domain):
-        conn = openstack.connect(cloud=cloud)
+    def get_projects(self, domain_id):
         projects = []
-        for project in conn.identity.projects(domain_id=domain.id):
-            projects.append(project)
+        for project in self.conn.identity.projects(domain_id=domain_id):
+            p = Project(project.id, project.name, domain_id)
+            projects.append(p.to_json())
         return projects
 
     def get_compute_totals(self, cloud, project):
