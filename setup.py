@@ -20,7 +20,7 @@ setup(name='openstack-darter',
       platforms=[],
       python_requires='>=3',
       install_requires=[
-          "click==6",
+          "click==7",
           "openstacksdk==0.10.0",
           "terminaltables==3.1.0",
           "influxdb==5.0.0",
