@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import click
 
 from darter.commands import commands

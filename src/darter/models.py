@@ -96,7 +96,7 @@ class Project:
 
 class JsonWriter:
 
-    """JsonWrite is to create json strutcs files"""
+    """JsonWrite is to create json structs files"""
 
     def __init__(self, path=None):
         darter_config = DarterUtil().get_config("darter")

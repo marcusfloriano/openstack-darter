@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import json
 
 from darter.util import DarterUtil

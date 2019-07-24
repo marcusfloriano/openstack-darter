@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import openstack.cloud
 
 from darter.models import Domain, Project
