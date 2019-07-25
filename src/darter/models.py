@@ -48,12 +48,7 @@ class Project:
         uuid (string): UUID of the project on domain
         name (string): Name of the project
         domain_id (string): Domain UUID
-        total_cores_used
-        total_instances_used
-        total_ram_used
-        max_total_cores
-        max_total_instances
-        max_total_ram_size
+        compute_quotes
 
     """
 
@@ -61,36 +56,21 @@ class Project:
         self.uuid = uuid
         self.name = name
         self.domain_id = domain_id
-        self.total_cores_used = None
-        self.total_instances_used = None
-        self.total_ram_used = None
-        self.max_total_cores = None
-        self.max_total_instances = None
-        self.max_total_ram_size = None
+        self.compute_quotes = {}
 
     def to_json(self):
         return {
             'uuid': self.uuid,
             'name': self.name,
             'domain_id': self.domain_id,
-            'total_cores_used': self.total_cores_used,
-            'total_instances_used': self.total_instances_used,
-            'total_ram_used': self.total_ram_used,
-            'max_total_cores': self.max_total_cores,
-            'max_total_instances': self.max_total_instances,
-            'max_total_ram_size': self.max_total_ram_size
+            'compute_quotes': self.compute_quotes
         }
 
     def from_json(self, data):
         self.uuid = data['uuid']
         self.name = data['name']
         self.domain_id = data['domain_id']
-        self.total_cores_used = data['total_cores_used']
-        self.total_instances_used = data['total_instances_used']
-        self.total_ram_used = data['total_ram_used']
-        self.max_total_cores = data['max_total_cores']
-        self.max_total_instances = data['max_total_instances']
-        self.max_total_ram_size = data['max_total_ram_size =']
+        self.compute_quotes = data['compute_quotes']
         return self
 
 

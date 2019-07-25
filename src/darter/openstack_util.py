@@ -2,6 +2,7 @@
 import openstack.cloud
 
 from darter.models import Domain, Project
+from darter.util import DarterUtil
 
 '''This class is for calculate the measurement for items into openstack '''
 
@@ -12,6 +13,10 @@ class OpenstackUtil:
         self.region = region
         self.conn = openstack.connect(cloud=self.region)
         self.conn_cloud = openstack.openstack_cloud(cloud=self.region)
+        self.conn_cloud_operator = openstack.operator_cloud(cloud=self.region)
+
+        self.darter_util = DarterUtil()
+        self.darter_util.init_logger(__name__)
 
     def get_domains(self):
         domains = []
@@ -29,14 +34,19 @@ class OpenstackUtil:
         return projects
 
     def get_compute_totals(self, project: Project):
+        self.darter_util.get_logger().debug("get_compute_totals for %s" % project.name)
+        quota_volume = self.conn_cloud_operator.get_volume_quotas(name_or_id=project.uuid)
+        self.darter_util.get_logger().debug(quota_volume)
         quota = self.conn_cloud.get_compute_limits(name_or_id=project.uuid)
 
-        project.total_cores_used = quota.total_cores_used
-        project.total_instances_used = quota.total_instances_used
-        project.total_ram_used = quota.total_ram_used
-        project.max_total_cores = quota.max_total_cores
-        project.max_total_instances = quota.max_total_instances
-        project.max_total_ram_size = quota.max_total_ram_size
+        project.compute_quotes = {
+            'total_cores_used': quota.total_cores_used,
+            'total_instances_used': quota.total_instances_used,
+            'total_ram_used': quota.total_ram_used,
+            'max_total_cores': quota.max_total_cores,
+            'max_total_instances': quota.max_total_instances,
+            'max_total_instances': quota.max_total_ram_size,
+        }
 
         return project
 
