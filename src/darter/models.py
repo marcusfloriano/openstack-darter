@@ -106,7 +106,7 @@ class JsonWriter:
         if not Path("%s" % self.datafiles).is_dir():
             os.makedirs("%s" % self.datafiles)
 
-    def items(self, file, name, items):
+    def write(self, file, name, items):
         data = {
             'totals': len(items),
             name: items
