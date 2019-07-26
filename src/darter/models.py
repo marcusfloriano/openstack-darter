@@ -57,13 +57,15 @@ class Project:
         self.name = name
         self.domain_id = domain_id
         self.compute_quotes = {}
+        self.volume_quotes ={}
 
     def to_json(self):
         return {
             'uuid': self.uuid,
             'name': self.name,
             'domain_id': self.domain_id,
-            'compute_quotes': self.compute_quotes
+            'compute_quotes': self.compute_quotes,
+            'volume_quotes': self.volume_quotes
         }
 
     def from_json(self, data):
@@ -71,6 +73,7 @@ class Project:
         self.name = data['name']
         self.domain_id = data['domain_id']
         self.compute_quotes = data['compute_quotes']
+        self.volume_quotes = data['volume_quotes']
         return self
 
 

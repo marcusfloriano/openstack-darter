@@ -12,8 +12,9 @@ class OpenstackUtil:
     def __init__(self, region):
         self.region = region
         self.conn = openstack.connect(cloud=self.region)
-        self.conn_cloud = openstack.openstack_cloud(cloud=self.region)
-        self.conn_cloud_operator = openstack.operator_cloud(cloud=self.region)
+        # self.conn = openstack.connect(cloud=self.region)
+        # self.conn_cloud = openstack.openstack_cloud(cloud=self.region)
+        # self.conn_cloud_operator = openstack.operator_cloud(cloud=self.region)
 
         self.darter_util = DarterUtil()
         self.darter_util.init_logger(__name__)
@@ -35,9 +36,7 @@ class OpenstackUtil:
 
     def get_compute_totals(self, project: Project):
         self.darter_util.get_logger().debug("get_compute_totals for %s" % project.name)
-        quota_volume = self.conn_cloud_operator.get_volume_quotas(name_or_id=project.uuid)
-        self.darter_util.get_logger().debug(quota_volume)
-        quota = self.conn_cloud.get_compute_limits(name_or_id=project.uuid)
+        quota = self.conn.get_compute_limits(name_or_id=project.uuid)
 
         project.compute_quotes = {
             'total_cores_used': quota.total_cores_used,
@@ -47,6 +46,12 @@ class OpenstackUtil:
             'max_total_instances': quota.max_total_instances,
             'max_total_instances': quota.max_total_ram_size,
         }
+
+        self.darter_util.get_logger().debug("get_volume_quotas for %s" % project.name)
+        quota_volume = self.conn.get_volume_limits(name_or_id=project.uuid)
+        self.darter_util.get_logger().debug(quota_volume)
+        for v in quota_volume:
+            project.volume_quotes[v] = quota_volume[v]
 
         return project
 
