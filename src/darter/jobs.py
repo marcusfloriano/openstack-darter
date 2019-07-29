@@ -36,7 +36,7 @@ def get_projects_by_domain(region: str, domain: Domain):
     darter_util.get_logger().debug("Region: %s" % region)
     darter_util.get_logger().debug(domain.to_json())
     projects = OpenstackUtil(region).get_projects(domain.uuid)
-    JsonWriter("domain").write("domain-%s" % domain.uuid, "projects", projects)
+    JsonWriter("domain/%s" % region).write("domain-%s" % domain.uuid, "projects", projects)
     darter_util.get_logger().debug("End processing get_projects_by_domain")
 
 
