@@ -31,8 +31,10 @@ class OpenstackUtil:
     def get_projects(self, domain_id):
         projects = []
         for project in self.conn.identity.projects(domain_id=domain_id):
+            servers = self.conn.list_servers(False, True, filters={"project_id": project.id})
             p = Project(project.id, project.name, domain_id)
             p = self.get_compute_totals(p)
+            p.servers = len(servers)
             projects.append(p.to_json())
         return projects
 

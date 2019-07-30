@@ -81,7 +81,8 @@ class Project:
         self.name = name
         self.domain_id = domain_id
         self.compute_quotes = {}
-        self.volume_quotes ={}
+        self.volume_quotes = {}
+        self.servers = 0
 
     def find_all(self, domain_uuid, region):
         items = JsonReader("domain/%s" % region).reader("domain-%s" % domain_uuid, "projects")
@@ -108,7 +109,8 @@ class Project:
             'name': self.name,
             'domain_id': self.domain_id,
             'compute_quotes': self.compute_quotes,
-            'volume_quotes': self.volume_quotes
+            'volume_quotes': self.volume_quotes,
+            'servers': self.servers
         }
 
     def from_json(self, data):
@@ -117,6 +119,7 @@ class Project:
         self.domain_id = data['domain_id']
         self.compute_quotes = data['compute_quotes']
         self.volume_quotes = data['volume_quotes']
+        self.servers = data['servers']
         return self
 
 
@@ -134,6 +137,18 @@ class Hypervisor:
         self.uuid = uuid
         self.vcpus_used = vcpus_used
         self.memory_used = memory_used
+
+    def find_all(self, region):
+        items = JsonReader().reader("hypervisors-%s" % region, "hypervisors")
+        hypervisors = []
+        for item in items:
+            hypervisors.append(Hypervisor().from_json(item))
+
+        def _sort(e):
+            return e.uuid
+
+        hypervisors.sort(key=_sort)
+        return hypervisors
 
     def to_json(self):
         return {
