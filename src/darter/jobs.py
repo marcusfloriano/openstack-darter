@@ -53,8 +53,9 @@ def get_projects_by_domain(region: str, domain: Domain):
 def get_total_servers(region: str, domain: Domain):
     darter_util.get_logger().debug("Start processing get_total_servers")
     projects = []
+    openstack_util = OpenstackUtil(region)
     for p in Project().find_all(domain.uuid, region):
-        servers_total = OpenstackUtil(region).get_total_servers(p.uuid)
+        servers_total = openstack_util.get_total_servers(p.uuid)
         p.servers_total = servers_total
         projects.append(p.to_json())
 
