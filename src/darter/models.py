@@ -122,30 +122,30 @@ class Project:
 
 class Hypervisor:
 
-    """ Hypervisor is contains information the memory and cpus used
+    """ Hypervisor is contains information the memory and vCPUs is used
 
     Attributes:
-        uuid (string):
-        vcpus_used (int):
-        memory_mb_used (int):
+        uuid (string): ID hypervisor
+        vcpus_used (int): vCPUs used by hypervisor
+        memory_used (int): memory used by hypervisor
     """
 
-    def __init__(self, uuid=None, vcpus_used=None, memory_mb_used=None):
+    def __init__(self, uuid=None, vcpus_used=None, memory_used=None):
         self.uuid = uuid
         self.vcpus_used = vcpus_used
-        self.memory_mb_used = memory_mb_used
+        self.memory_used = memory_used
 
     def to_json(self):
         return {
             'uuid': self.uuid,
             'vcpus_used': self.vcpus_used,
-            'memory_mb_used': self.memory_mb_used
+            'memory_used': self.memory_used
         }
 
     def from_json(self, data):
         self.uuid = data['uuid']
         self.vcpus_used = data['vcpus_used']
-        self.memory_mb_used = data['memory_mb_used']
+        self.memory_used = data['memory_used']
         return self
 
 
