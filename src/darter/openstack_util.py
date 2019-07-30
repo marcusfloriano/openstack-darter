@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import openstack.cloud
 
-from darter.models import Domain, Project
+from darter.models import Domain, Project, Hypervisor
 from darter.util import DarterUtil
 
 '''This class is for calculate the measurement for items into openstack '''
@@ -12,12 +12,16 @@ class OpenstackUtil:
     def __init__(self, region):
         self.region = region
         self.conn = openstack.connect(cloud=self.region)
-        # self.conn = openstack.connect(cloud=self.region)
-        # self.conn_cloud = openstack.openstack_cloud(cloud=self.region)
-        # self.conn_cloud_operator = openstack.operator_cloud(cloud=self.region)
-
         self.darter_util = DarterUtil()
         self.darter_util.init_logger(__name__)
+
+    def get_hypervisors(self):
+        hypervisors = []
+        for h in self.conn.list_hypervisors():
+            vcpus_used = h['vcpus_used'] if 'vcpus_used' in h else 0
+            memory_mb_used = h['memory_mb_used'] if 'memory_mb_used' in h else 0
+            hypervisors.append(Hypervisor(h['id'], vcpus_used, memory_mb_used).to_json())
+        return hypervisors
 
     def get_domains(self):
         domains = []

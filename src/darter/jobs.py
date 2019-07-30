@@ -9,6 +9,14 @@ darter_util = DarterUtil()
 darter_util.init_logger(__name__)
 
 
+def get_hypervisors(region):
+    """Job for get hypervisor infos"""
+    darter_util.get_logger().debug("Start processing get_hypervisors")
+    hypervisors = OpenstackUtil(region).get_hypervisors()
+    JsonWriter().write("hypervisors-%s" % region, "hypervisors", hypervisors)
+    darter_util.get_logger().debug("End processing get_hypervisors")
+
+
 def get_all_domains(region):
     """Job for get all domains from openstack"""
     darter_util.get_logger().debug("Start processing job_get_domains")
@@ -36,6 +44,7 @@ def get_projects_by_domain(region: str, domain: Domain):
     darter_util.get_logger().debug("Region: %s" % region)
     darter_util.get_logger().debug(domain.to_json())
     projects = OpenstackUtil(region).get_projects(domain.uuid)
+
     JsonWriter("domain/%s" % region).write("domain-%s" % domain.uuid, "projects", projects)
     darter_util.get_logger().debug("End processing get_projects_by_domain")
 

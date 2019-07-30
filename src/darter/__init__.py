@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import click
 
-from darter.commands import commands
 from darter.util import DarterUtil
+from darter.commands.domain_commands import domain
+from darter.commands.project_commands import project
+from darter.commands.capacity_commands import capacity
+from darter.commands.hypervisor_commands import hypervisor
 
 
-@click.command(cls=click.CommandCollection, sources=[commands])
+@click.command(cls=click.CommandCollection, sources=[domain, project, capacity, hypervisor])
 @click.pass_context
 def cli(ctx):
 
