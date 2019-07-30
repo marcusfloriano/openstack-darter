@@ -31,12 +31,14 @@ class OpenstackUtil:
     def get_projects(self, domain_id):
         projects = []
         for project in self.conn.identity.projects(domain_id=domain_id):
-            servers = self.conn.list_servers(False, True, filters={"project_id": project.id})
             p = Project(project.id, project.name, domain_id)
             p = self.get_compute_totals(p)
-            p.servers = len(servers)
             projects.append(p.to_json())
         return projects
+
+    def get_total_servers(self, project_id):
+        servers = self.conn.list_servers(False, True, filters={"project_id": project_id})
+        return len(servers)
 
     def get_compute_totals(self, project: Project):
         self.darter_util.get_logger().debug("get_compute_totals for %s" % project.name)

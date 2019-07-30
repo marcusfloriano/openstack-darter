@@ -3,7 +3,7 @@ import json
 
 from darter.util import DarterUtil
 from darter.openstack_util import OpenstackUtil
-from darter.models import JsonWriter, Domain
+from darter.models import JsonWriter, Domain, Project
 
 darter_util = DarterUtil()
 darter_util.init_logger(__name__)
@@ -35,6 +35,7 @@ def queue_all_projects(region):
         for _domain in data['domains']:
             domain = Domain().from_json(_domain)
             darter_util.get_redis_queue().enqueue("darter.jobs.get_projects_by_domain", region, domain)
+            darter_util.get_redis_queue().enqueue("darter.jobs.get_total_servers", region, domain)
     darter_util.get_logger().debug("End processing projects_processing")
 
 
@@ -48,6 +49,17 @@ def get_projects_by_domain(region: str, domain: Domain):
     JsonWriter("domain/%s" % region).write("domain-%s" % domain.uuid, "projects", projects)
     darter_util.get_logger().debug("End processing get_projects_by_domain")
 
+
+def get_total_servers(region: str, domain: Domain):
+    darter_util.get_logger().debug("Start processing get_total_servers")
+    projects = []
+    for p in Project().find_all(domain.uuid, region):
+        servers_total = OpenstackUtil(region).get_total_servers(p.uuid)
+        p.servers_total = servers_total
+        projects.append(p.to_json())
+
+    JsonWriter("domain/%s" % region).write("domain-%s" % domain.uuid, "projects", projects)
+    darter_util.get_logger().debug("End processing get_total_servers")
 
 
 
