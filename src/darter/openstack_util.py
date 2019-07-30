@@ -18,9 +18,7 @@ class OpenstackUtil:
     def get_hypervisors(self):
         hypervisors = []
         for h in self.conn.list_hypervisors():
-            vcpus_used = h['vcpus_used'] if 'vcpus_used' in h else 0
-            memory_mb_used = h['memory_mb_used'] if 'memory_mb_used' in h else 0
-            hypervisors.append(Hypervisor(h['id'], vcpus_used, memory_mb_used).to_json())
+            hypervisors.append(Hypervisor(h['id'], h['vcpus_used'], h['memory_used']).to_json())
         return hypervisors
 
     def get_domains(self):
