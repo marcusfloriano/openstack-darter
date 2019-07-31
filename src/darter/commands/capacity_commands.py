@@ -31,7 +31,7 @@ def resume(util, region):
     for d in domains:
         projects = Project().find_all(d.uuid, region)
         for p in projects:
-            data['servers_total'] = data['servers_total'] + p.servers_total
+            print(p.servers_ids)
 
     data['memory_used'] = int(data['memory_used'] / 1024)
     print(data)
