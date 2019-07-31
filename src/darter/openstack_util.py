@@ -3,8 +3,15 @@ import openstack.cloud
 
 from darter.models import Domain, Project, Hypervisor
 from darter.util import DarterUtil
+from cinderclient.v3 import client as cinderclient
+from cinderclient import utils
 
 '''This class is for calculate the measurement for items into openstack '''
+
+_quota_resources = ['volumes', 'snapshots', 'gigabytes',
+                    'backups', 'backup_gigabytes',
+                    'per_volume_gigabytes', 'groups', ]
+_quota_infos = ['Type', 'In_use', 'Reserved', 'Limit', 'Allocated']
 
 
 class OpenstackUtil:
@@ -12,6 +19,7 @@ class OpenstackUtil:
     def __init__(self, region):
         self.region = region
         self.conn = openstack.connect(cloud=self.region)
+        self.conn_cinder = cinderclient.Client(session=self.conn.session)
         self.darter_util = DarterUtil()
         self.darter_util.init_logger(__name__)
 
@@ -57,10 +65,27 @@ class OpenstackUtil:
         }
 
         self.darter_util.get_logger().debug("get_volume_quotas for %s" % project.name)
-        quota_volume = self.conn.get_volume_quotas(name_or_id=project.uuid)
+        quota_volume = self.conn_cinder.quotas.get(project.uuid, True)
         self.darter_util.get_logger().debug(quota_volume)
-        for v in quota_volume:
-            project.volume_quotes[v] = quota_volume[v]
-
+        for q in self.quota_usage_show(quota_volume):
+            project.volume_quotes[q['Type']] = {
+                'limit': q['Type'],
+                'in_use': q['In_use']
+            }
         return project
 
+    def quota_usage_show(self, quotas):
+        quota_list = []
+        quotas_info_dict = utils.unicode_key_value_to_string(quotas._info)
+        for resource in quotas_info_dict.keys():
+            good_name = False
+            for name in _quota_resources:
+                if resource.startswith(name):
+                    good_name = True
+            if not good_name:
+                continue
+            quota_info = getattr(quotas, resource, None)
+            quota_info['Type'] = resource
+            quota_info = dict((k.capitalize(), v) for k, v in quota_info.items())
+            quota_list.append(quota_info)
+        return quota_list
