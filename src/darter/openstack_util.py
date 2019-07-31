@@ -43,7 +43,7 @@ class OpenstackUtil:
             ids.append(s['id'])
         return ids
 
-    def get_compute_totals(self, project: Project):
+    def nãoget_compute_totals(self, project: Project):
         self.darter_util.get_logger().debug("get_compute_totals for %s" % project.name)
         quota = self.conn.get_compute_limits(name_or_id=project.uuid)
 
@@ -57,7 +57,7 @@ class OpenstackUtil:
         }
 
         self.darter_util.get_logger().debug("get_volume_quotas for %s" % project.name)
-        quota_volume = self.conn.get_volume_limits(name_or_id=project.uuid)
+        quota_volume = self.conn.get_volume_quotas(name_or_id=project.uuid)
         self.darter_util.get_logger().debug(quota_volume)
         for v in quota_volume:
             project.volume_quotes[v] = quota_volume[v]

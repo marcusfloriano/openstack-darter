@@ -33,8 +33,7 @@ class Domain:
             d = Domain().from_json(item)
             projects = Project().find_all(d.uuid, region)
             if all:
-                for p in projects:
-                    domains.append(Domain().from_json(item))
+                domains.append(Domain().from_json(item))
             else:
                 for p in projects:
                     if 'totalGigabytesUsed' in p.volume_quotes and p.volume_quotes['totalGigabytesUsed'] > 0:

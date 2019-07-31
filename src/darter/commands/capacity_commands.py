@@ -20,7 +20,8 @@ def resume(util, region):
     data = {
         'vcpus_used': 0,
         'memory_used': 0,
-        'servers_total': 0
+        'servers_total': 0,
+        'totalVolumesUsed': 0
     }
     for h in hypervisors:
         data['vcpus_used'] = data['vcpus_used'] + h.vcpus_used
@@ -31,7 +32,9 @@ def resume(util, region):
     for d in domains:
         projects = Project().find_all(d.uuid, region)
         for p in projects:
-            print(p.servers_ids)
+            data['servers_total'] = data['servers_total'] + len(p.servers_ids)
+            if 'totalVolumesUsed' in p.volume_quotes:
+                data['totalVolumesUsed'] = data['totalVolumesUsed'] + p.volume_quotes['totalVolumesUsed']
 
     data['memory_used'] = int(data['memory_used'] / 1024)
     print(data)
