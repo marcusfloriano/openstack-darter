@@ -55,8 +55,7 @@ def get_total_servers(region: str, domain: Domain):
     projects = []
     openstack_util = OpenstackUtil(region)
     for p in Project().find_all(domain.uuid, region):
-        servers_total = openstack_util.get_total_servers(p.uuid)
-        p.servers_total = servers_total
+        p.servers_ids = openstack_util.get_servers_ids(p.uuid)
         projects.append(p.to_json())
 
     JsonWriter("domain/%s" % region).write("domain-%s" % domain.uuid, "projects", projects)

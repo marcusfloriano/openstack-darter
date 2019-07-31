@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 
-from terminaltables import AsciiTable
 from darter.models import Project, Domain, Hypervisor
-from darter.openstack_util import OpenstackUtil
 
 
 @click.group()
@@ -22,7 +20,7 @@ def resume(util, region):
     data = {
         'vcpus_used': 0,
         'memory_used': 0,
-        'total_instances_used': 0
+        'servers_total': 0
     }
     for h in hypervisors:
         data['vcpus_used'] = data['vcpus_used'] + h.vcpus_used
@@ -33,7 +31,7 @@ def resume(util, region):
     for d in domains:
         projects = Project().find_all(d.uuid, region)
         for p in projects:
-            data['total_instances_used'] = data['total_instances_used'] + p.compute_quotes['total_instances_used']
+            data['servers_total'] = data['servers_total'] + p.servers_total
 
     data['memory_used'] = int(data['memory_used'] / 1024)
     print(data)

@@ -82,7 +82,7 @@ class Project:
         self.domain_id = domain_id
         self.compute_quotes = {}
         self.volume_quotes = {}
-        self.servers_total = 0
+        self.servers_ids = []
 
     def find_all(self, domain_uuid, region):
         items = JsonReader("domain/%s" % region).reader("domain-%s" % domain_uuid, "projects")
@@ -110,7 +110,7 @@ class Project:
             'domain_id': self.domain_id,
             'compute_quotes': self.compute_quotes,
             'volume_quotes': self.volume_quotes,
-            'servers_total': self.servers_total
+            'servers_ids': self.servers_ids
         }
 
     def from_json(self, data):
@@ -119,7 +119,7 @@ class Project:
         self.domain_id = data['domain_id']
         self.compute_quotes = data['compute_quotes']
         self.volume_quotes = data['volume_quotes']
-        self.servers_total = data['servers_total']
+        self.servers_ids = data['servers_ids']
         return self
 
 
