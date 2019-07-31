@@ -43,7 +43,7 @@ class OpenstackUtil:
             ids.append(s['id'])
         return ids
 
-    def nãoget_compute_totals(self, project: Project):
+    def get_compute_totals(self, project: Project):
         self.darter_util.get_logger().debug("get_compute_totals for %s" % project.name)
         quota = self.conn.get_compute_limits(name_or_id=project.uuid)
 
