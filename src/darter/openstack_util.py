@@ -3,7 +3,7 @@ import openstack.cloud
 
 from darter.models import Domain, Project, Hypervisor
 from darter.util import DarterUtil
-from cinderclient.v3 import client as cinderclient
+from cinderclient.v2 import client as cinderclient
 from cinderclient import utils
 
 '''This class is for calculate the measurement for items into openstack '''
