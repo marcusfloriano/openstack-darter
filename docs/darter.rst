@@ -1,24 +1,15 @@
 darter package
 ==============
 
+Subpackages
+-----------
+
+.. toctree::
+
+   darter.commands
+
 Submodules
 ----------
-
-darter.commands module
-----------------------
-
-.. automodule:: darter.commands
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-darter.config module
---------------------
-
-.. automodule:: darter.config
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 darter.jobs module
 ------------------
@@ -28,18 +19,26 @@ darter.jobs module
    :undoc-members:
    :show-inheritance:
 
-darter.model module
--------------------
+darter.models module
+--------------------
 
-.. automodule:: darter.model
+.. automodule:: darter.models
    :members:
    :undoc-members:
    :show-inheritance:
 
-darter.openstack module
------------------------
+darter.openstack\_util module
+-----------------------------
 
-.. automodule:: darter.openstack
+.. automodule:: darter.openstack_util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+darter.util module
+------------------
+
+.. automodule:: darter.util
    :members:
    :undoc-members:
    :show-inheritance:

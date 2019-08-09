@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+"""Contains commands for generate views of capacities"""
 import click
+import json
 
 from darter.models import Project, Domain, Hypervisor
 
@@ -13,6 +15,13 @@ def capacity():
 @click.pass_obj
 @click.option('--region', required=True, type=str)
 def resume(util, region):
+    """Command for generate resume of capacity by region
+
+    Args:
+        util (pass_obj): Object UTIL passed from @click.pass_object
+        region (str): Region for generate resume
+
+    """
     util.init_logger(__name__)
     util.get_logger().debug("Start executing capacity resume")
 
@@ -20,8 +29,7 @@ def resume(util, region):
     data = {
         'vcpus_used': 0,
         'memory_used': 0,
-        'servers_total': 0,
-        'totalVolumesUsed': 0
+        'servers_total': 0
     }
     for h in hypervisors:
         data['vcpus_used'] = data['vcpus_used'] + h.vcpus_used
@@ -33,8 +41,10 @@ def resume(util, region):
         projects = Project().find_all(d.uuid, region)
         for p in projects:
             data['servers_total'] = data['servers_total'] + len(p.servers_ids)
-            if 'totalVolumesUsed' in p.volume_quotes:
-                data['totalVolumesUsed'] = data['totalVolumesUsed'] + p.volume_quotes['totalVolumesUsed']
+            for k in p.volume_quotes.keys():
+                if k not in data:
+                    data[k] = 0
+                data[k] = data[k] + p.volume_quotes[k]['in_use']
 
     data['memory_used'] = int(data['memory_used'] / 1024)
-    print(data)
+    print(json.dumps(data, indent=4))

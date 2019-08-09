@@ -10,7 +10,8 @@ Welcome to openstack-darter's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   usage/installation
+   modules
 
 Indices and tables
 ==================
