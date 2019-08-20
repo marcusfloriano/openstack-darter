@@ -25,11 +25,11 @@ setup(name='openstack-darter',
           "openstacksdk==0.31.2",
           "python-cinderclient==4.2.1",
           "terminaltables==3.1.0",
-          "influxdb==5.0.0",
           "redis==2.10.6",
-          "rq==0.10.0"
+          "rq==0.10.0",
+          "rq-dashboard"
       ],
-      setup_requires=['pytest-runner', 'sphinxcontrib-napoleon', 'rq-dashboard'],
+      setup_requires=['pytest-runner', 'sphinxcontrib-napoleon'],
       tests_require=['pytest', 'pylint'],
       classifiers=[
             # Documents for packaging python softwares
