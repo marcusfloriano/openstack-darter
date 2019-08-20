@@ -20,13 +20,13 @@ def sync(ctx, region):
     ctx.obj.get_logger().debug("Start sync on region")
 
     ctx.forward(hypervisor_sync)
-    ctx.invoke(hypervisor_sync, region)
+    ctx.invoke(hypervisor_sync, region=region)
 
     ctx.forward(domain_sync)
-    ctx.invoke(domain_sync, region)
+    ctx.invoke(domain_sync, region=region)
 
     ctx.forward(project_sync)
-    ctx.invoke(project_sync, region)
+    ctx.invoke(project_sync, region=region)
 
     ctx.obj.get_logger().debug("End sync on region")
 
