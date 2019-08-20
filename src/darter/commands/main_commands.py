@@ -17,16 +17,11 @@ def main():
 def sync(ctx, region):
     """Sync is for get all info by region"""
     ctx.obj.init_logger(__name__)
-    ctx.obj.get_logger().debug("Start sync on region")
+    ctx.obj.get_logger().debug("Start sync on region: %s" % region)
 
     ctx.forward(hypervisor_sync)
-    ctx.invoke(hypervisor_sync, region=region)
-
     ctx.forward(domain_sync)
-    ctx.invoke(domain_sync, region=region)
-
     ctx.forward(project_sync)
-    ctx.invoke(project_sync, region=region)
 
-    ctx.obj.get_logger().debug("End sync on region")
+    ctx.obj.get_logger().debug("End sync on region: %s" % region)
 
