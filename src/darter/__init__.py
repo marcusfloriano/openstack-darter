@@ -6,9 +6,10 @@ from darter.commands.domain_commands import domain
 from darter.commands.project_commands import project
 from darter.commands.capacity_commands import capacity
 from darter.commands.hypervisor_commands import hypervisor
+from darter.commands.main_commands import main
 
 
-@click.command(cls=click.CommandCollection, sources=[domain, project, capacity, hypervisor])
+@click.command(cls=click.CommandCollection, sources=[domain, project, capacity, hypervisor, main])
 @click.pass_context
 def cli(ctx):
 
