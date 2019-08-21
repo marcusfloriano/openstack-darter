@@ -163,30 +163,35 @@ class Hypervisor:
         return self
 
 
-class DarterReader:
+class DarterReaderWriter:
 
     def __init__(self, path=None):
-        self.datafiles = DarterUtil().get_data_dir()
+        self.util = DarterUtil()
+        self.logger = self.util.init_logger(__name__).get_logger()
+        self.datafiles = self.util.get_data_dir()
         if path is not None:
             self.datafiles = "%s/%s" % (self.datafiles, path)
+        self.logger.debug("Check if necessary create directory data files: %s" % self.datafiles)
         if not Path("%s" % self.datafiles).is_dir():
             os.makedirs("%s" % self.datafiles)
 
 
-class JsonWriter(DarterReader):
+class JsonWriter(DarterReaderWriter):
 
     """JsonWrite is to create json structs files"""
 
     def write(self, file, name, items):
+        self.logger.debug("Writer '%s' in file '%s'" % (name, file))
         data = {
             'totals': len(items),
             name: items
         }
+        self.logger.debug("Writer data '%s' in file '%s'" % (data, ("%s/%s.json" % (self.datafiles, file))))
         with open("%s/%s.json" % (self.datafiles, file), 'w') as file:
             json.dump(data, file)
 
 
-class JsonReader(DarterReader):
+class JsonReader(DarterReaderWriter):
 
     """JsonReader is to reader json structs files"""
 
