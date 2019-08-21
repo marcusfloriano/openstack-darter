@@ -2,9 +2,11 @@
 import os
 import yaml
 import logging
+import re
 
 from redis import Redis, ConnectionPool
 from rq import Queue
+from pathlib import Path
 
 UNIX_CONFIG_HOME = os.path.join(os.path.expanduser(os.path.join('~', '.config')), 'darter')
 UNIX_SITE_CONFIG_HOME = '/etc/darter'
@@ -33,6 +35,12 @@ class DarterUtil:
     def __init__(self):
         self.filelist = CONFIG_FILES
         self.config_filename, self.darter_config = self._load_config()
+        self.data_dir = re.sub(r'(.*\/).*', '\g<1>', self.config_filename)
+
+    def get_data_dir(self):
+        datafiles = "%s/data" % self.data_dir
+        if not Path("%s" % datafiles).is_dir():
+            os.makedirs("%s" % datafiles)
 
     def get_config(self, key):
         if key in self.darter_config:

@@ -1,5 +1,15 @@
+import os
 
 from setuptools import setup, find_packages
+
+
+def get_version():
+    basedir = os.path.dirname(__file__)
+    with open(os.path.join(basedir, 'src/darter/version.py')) as f:
+        locals = {}
+        exec(f.read(), locals)
+        return locals['VERSION']
+    raise RuntimeError('No version info found.')
 
 
 def readme():
@@ -8,7 +18,7 @@ def readme():
 
 
 setup(name='openstack-darter',
-      version='0.0.1.dev1',
+      version=get_version(),
       description=readme(),
       keywords='openstack capacity panel',
       url='',

@@ -10,7 +10,7 @@ darter_util.init_logger(__name__)
 
 
 def get_hypervisors(region):
-    """Job for get hypervisor infos"""
+    """Job for get hypervisor info"""
     darter_util.get_logger().debug("Start processing get_hypervisors")
     hypervisors = OpenstackUtil(region).get_hypervisors()
     JsonWriter().write("hypervisors-%s" % region, "hypervisors", hypervisors)
@@ -29,8 +29,7 @@ def get_all_domains(region):
 
 def queue_all_projects(region):
     darter_util.get_logger().debug("Start processing projects_processing")
-    darter_config = darter_util.get_config("darter")
-    with open("%s/%s.json" % (darter_config['datafiles'], 'domains-%s' % region)) as json_file:
+    with open("%s/%s.json" % (darter_util.get_data_dir(), 'domains-%s' % region)) as json_file:
         data = json.load(json_file)
         for _domain in data['domains']:
             domain = Domain().from_json(_domain)

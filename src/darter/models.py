@@ -166,8 +166,7 @@ class Hypervisor:
 class DarterReader:
 
     def __init__(self, path=None):
-        darter_config = DarterUtil().get_config("darter")
-        self.datafiles = darter_config['datafiles']
+        self.datafiles = DarterUtil().get_data_dir()
         if path is not None:
             self.datafiles = "%s/%s" % (self.datafiles, path)
         if not Path("%s" % self.datafiles).is_dir():
