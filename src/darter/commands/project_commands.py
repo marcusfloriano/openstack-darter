@@ -4,6 +4,7 @@ import json
 
 from terminaltables import AsciiTable
 from darter.models import Project
+from darter.exceptions import DarterException
 
 
 @click.group()
@@ -19,7 +20,10 @@ def sync(util, region):
     util.init_logger(__name__)
     util.get_logger().debug("Start executing projects")
 
-    util.get_redis_queue().enqueue("darter.jobs.queue_all_projects", region)
+    try:
+        util.get_redis_queue().enqueue("darter.jobs.queue_all_projects", region)
+    except DarterException as e:
+        util.get_logger().error(e)
 
     util.get_logger().debug("End executing projects")
 

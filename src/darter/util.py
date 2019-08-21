@@ -4,9 +4,10 @@ import yaml
 import logging
 import re
 
-from redis import Redis, ConnectionPool
+from redis import Redis, ConnectionPool, Connection, RedisError
 from rq import Queue
 from pathlib import Path
+from darter.exceptions import DarterException
 
 UNIX_CONFIG_HOME = os.path.join(os.path.expanduser(os.path.join('~', '.config')), 'darter')
 UNIX_SITE_CONFIG_HOME = '/etc/darter'
@@ -71,7 +72,12 @@ class DarterUtil:
 
     def get_redis_queue(self):
         redis_config = self.get_config("redis")
-        pool = ConnectionPool(host=redis_config["host"])
-        queue = Queue("high", connection=Redis(connection_pool=pool))
-        return queue
+        try:
+            pool = ConnectionPool(host=redis_config["host"])
+            pool.make_connection().connect()
+            queue = Queue("high", connection=Redis(connection_pool=pool))
+            return queue
+        except RedisError as e:
+            self.get_logger().exception(e)
+            raise DarterException("Not possible connection on Redis")
 

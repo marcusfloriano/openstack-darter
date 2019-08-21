@@ -3,7 +3,7 @@ import click
 
 from terminaltables import AsciiTable
 from darter.models import Domain
-
+from darter.exceptions import DarterException
 
 @click.group()
 def domain():
@@ -18,7 +18,10 @@ def sync(util, region):
     util.init_logger(__name__)
     util.get_logger().debug("Start executing domains")
 
-    util.get_redis_queue().enqueue("darter.jobs.get_all_domains", region)
+    try:
+        util.get_redis_queue().enqueue("darter.jobs.get_all_domains", region)
+    except DarterException as e:
+        util.get_logger().error(e)
 
     util.get_logger().debug("End executing domains")
 

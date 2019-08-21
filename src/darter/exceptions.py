@@ -1,0 +1,3 @@
+
+class DarterException(Exception):
+    pass

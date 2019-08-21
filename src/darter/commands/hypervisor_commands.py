@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 
+from darter.exceptions import DarterException
 
 @click.group()
 def hypervisor():
@@ -15,7 +16,10 @@ def sync(util, region):
     util.init_logger(__name__)
     util.get_logger().debug("Start executing hypervisors")
 
-    util.get_redis_queue().enqueue("darter.jobs.get_hypervisors", region)
+    try:
+        util.get_redis_queue().enqueue("darter.jobs.get_hypervisors", region)
+    except DarterException as e:
+        util.get_logger().error(e)
 
     util.get_logger().debug("End executing hypervisors")
 
