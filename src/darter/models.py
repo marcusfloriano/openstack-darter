@@ -7,6 +7,7 @@ This module contains all structs that used on Openstack-Darter.
 import os
 import json
 import logging
+import re
 
 from darter.util import DarterUtil
 from pathlib import Path
@@ -163,6 +164,21 @@ class Hypervisor:
         self.vcpus_used = data['vcpus_used']
         self.memory_used = data['memory_used']
         return self
+
+
+class Capacity:
+
+    def __init__(self):
+        self.util = DarterUtil()
+        self.data_store = self.util.get_store_data()
+
+    def find_all(self):
+        data = {}
+        for file in os.listdir(self.data_store):
+            if re.match("^capacity\-resume\-.*?\.json$", file):
+                content = JsonReader().reader(file.replace(".json",""), 'capacity')
+                data.update(content)
+        return data
 
 
 class DarterReaderWriter:

@@ -56,4 +56,4 @@ def resume(util, region):
                 data['cinder'][k] = data['cinder'][k] + p.volume_quotes[k]['in_use']
 
     data['memory_used'] = int(data['memory_used'] / 1024)
-    JsonWriter().write("capacity-resume-%s" % region, "capacity", data)
+    JsonWriter().write("capacity-resume-%s" % region, "capacity", {"%s" % region: data})

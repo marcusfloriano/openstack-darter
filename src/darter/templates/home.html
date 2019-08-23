@@ -16,10 +16,54 @@
         <div class="section">
             <h1>Compute in Use</h1>
         </div>
+        <div class="section">
+            <table id="compute" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Region</th>
+                        <th>Servers Totals</th>
+                        <th>vCPUs Used</th>
+                        <th>Memory Used</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for region in regions %}
+                    <tr>
+                        <td>{{region}}</td>
+                        <td>{{capacity[region]['servers_total']}}</td>
+                        <td>{{capacity[region]['vcpus_used']}}</td>
+                        <td>{{capacity[region]['memory_used']}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="span6">
         <div class="section">
             <h1>Volume in Use</h1>
+        </div>
+        <div class="section">
+            <table id="volume" class="table table-bordered">
+                {% for region in regions %}
+                <thead>
+                    <tr>
+                        <th>Region</th>
+                        <th>Type</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for type in capacity[region]['cinder'].keys() %}
+                    <tr>
+                        <td>{{region}}</td>
+                        <td>{{type}}</td>
+                        <td>{{capacity[region]['cinder'][type]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% endfor %}
+            </table>
         </div>
     </div>
 </div>
