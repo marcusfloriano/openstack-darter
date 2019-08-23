@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 import json
+import logging
 
 from terminaltables import AsciiTable
 from darter.models import Project
@@ -17,15 +18,15 @@ def project():
 @click.option('--region', required=True, type=str)
 def sync(util, region):
     """Get all projects from each Domain"""
-    util.init_logger(__name__)
-    util.get_logger().debug("Start executing projects")
+    logger = logging.getLogger(__name__)
+    logger.debug("Start executing projects")
 
     try:
         util.get_redis_queue().enqueue("darter.jobs.queue_all_projects", region)
     except DarterException as e:
-        util.get_logger().error(e)
+        logger.error(e)
 
-    util.get_logger().debug("End executing projects")
+    logger.debug("End executing projects")
 
 
 @project.command("projects")
@@ -35,8 +36,8 @@ def sync(util, region):
 def project_list(util, domain_id, region):
     """List all projects from domain"""
     """Get all projects from each Domain"""
-    util.init_logger(__name__)
-    util.get_logger().debug("Start executing projects list")
+    logger = logging.getLogger(__name__)
+    logger.debug("Start executing projects list")
 
     data = [['ID', 'Name']]
     for p in Project().find_all(domain_id, region):
@@ -45,7 +46,7 @@ def project_list(util, domain_id, region):
     table = AsciiTable(data)
     click.echo(table.table)
 
-    util.get_logger().debug("End executing projects list")
+    logger.debug("End executing projects list")
 
 
 @project.command("project-info")
@@ -56,12 +57,12 @@ def project_list(util, domain_id, region):
 def project_info(util, domain_id, project_id, region):
     """List all projects from domain"""
     """Get all projects from each Domain"""
-    util.init_logger(__name__)
-    util.get_logger().debug("Start executing projects")
+    logger = logging.getLogger(__name__)
+    logger.debug("Start executing projects")
 
     project = Project().find_by_id(domain_id, project_id, region)
 
     click.echo(json.dumps(project.volume_quotes, indent=4))
     click.echo(json.dumps(project.compute_quotes, indent=4))
 
-    util.get_logger().debug("End executing projects")
+    logger.debug("End executing projects")

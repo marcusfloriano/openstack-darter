@@ -6,6 +6,7 @@ This module contains all structs that used on Openstack-Darter.
 """
 import os
 import json
+import logging
 
 from darter.util import DarterUtil
 from pathlib import Path
@@ -84,10 +85,11 @@ class Project:
         self.servers_ids = []
 
     def find_all(self, domain_uuid, region):
-        items = JsonReader("domain/%s" % region).reader("domain-%s" % domain_uuid, "projects")
+        # items = JsonReader("domain/%s" % region).reader("domain-%s" % domain_uuid, "projects")
         projects = []
-        for item in items:
-            projects.append(Project().from_json(item))
+        # project = Project()
+        # for item in items:
+        #     projects.append(project.from_json(item))
 
         def _sort(e):
             return e.name
@@ -167,12 +169,12 @@ class DarterReaderWriter:
 
     def __init__(self, path=None):
         self.util = DarterUtil()
-        self.logger = self.util.init_logger(__name__).get_logger()
-        self.datafiles = self.util.get_data_dir()
+        self.logger = logging.getLogger(__name__)
+        self.datafiles = self.util.get_store_data()
         if path is not None:
             self.datafiles = "%s/%s" % (self.datafiles, path)
-        self.logger.debug("Check if necessary create directory data files: %s" % self.datafiles)
         if not Path("%s" % self.datafiles).is_dir():
+            self.logger.debug("Create directory data files: %s" % self.datafiles)
             os.makedirs("%s" % self.datafiles)
 
 
@@ -186,7 +188,7 @@ class JsonWriter(DarterReaderWriter):
             'totals': len(items),
             name: items
         }
-        self.logger.debug("Writer data '%s' in file '%s'" % (data, ("%s/%s.json" % (self.datafiles, file))))
+        # self.logger.debug("Writer data '%s' in file '%s'" % (data, ("%s/%s.json" % (self.datafiles, file))))
         with open("%s/%s.json" % (self.datafiles, file), 'w') as file:
             json.dump(data, file)
 

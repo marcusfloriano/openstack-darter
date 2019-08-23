@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import click
+import logging
 
 from darter.exceptions import DarterException
+
 
 @click.group()
 def hypervisor():
@@ -13,13 +15,13 @@ def hypervisor():
 @click.option('--region', required=True, type=str)
 def sync(util, region):
     """Get Hypervisors from openstack"""
-    util.init_logger(__name__)
-    util.get_logger().debug("Start executing hypervisors")
+    logger = logging.getLogger(__name__)
+    logger.debug("Start executing hypervisors")
 
     try:
         util.get_redis_queue().enqueue("darter.jobs.get_hypervisors", region)
     except DarterException as e:
-        util.get_logger().error(e)
+        logger.error(e)
 
-    util.get_logger().debug("End executing hypervisors")
+    logger.debug("End executing hypervisors")
 

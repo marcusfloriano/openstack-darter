@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import openstack.cloud
+import logging
 
 from darter.models import Domain, Project, Hypervisor
 from darter.util import DarterUtil
@@ -20,7 +21,7 @@ class OpenstackUtil:
         self.conn = openstack.connect(cloud=self.region)
         self.conn_cinder = cinderclient.Client(session=self.conn.session)
         self.darter_util = DarterUtil()
-        self.darter_util.init_logger(__name__)
+        self.logger = logging.getLogger(__name__)
 
     def get_hypervisors(self):
         hypervisors = []
@@ -51,7 +52,7 @@ class OpenstackUtil:
         return ids
 
     def get_compute_totals(self, project: Project):
-        self.darter_util.get_logger().debug("get_compute_totals for %s" % project.name)
+        self.logger.debug("get_compute_totals for %s" % project.name)
         quota = self.conn.get_compute_limits(name_or_id=project.uuid)
 
         project.compute_quotes = {
@@ -63,9 +64,9 @@ class OpenstackUtil:
             'max_total_ram_size': quota.max_total_ram_size
         }
 
-        self.darter_util.get_logger().debug("get_volume_quotas for %s" % project.name)
+        self.logger.debug("get_volume_quotas for %s" % project.name)
         quota_volume = self.conn_cinder.quotas.get(project.uuid, True)
-        self.darter_util.get_logger().debug(quota_volume)
+        self.logger.debug(quota_volume)
         for q in self.quota_usage_show(quota_volume):
             project.volume_quotes[q['Type']] = {
                 'limit': q['Type'],

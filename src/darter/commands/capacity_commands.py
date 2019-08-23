@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Contains commands for generate views of capacities"""
 import click
-import json
+import logging
 
-from darter.models import Project, Domain, Hypervisor
+from darter.models import Project, Domain, Hypervisor, JsonWriter
 
 
 @click.group()
@@ -22,8 +22,8 @@ def resume(util, region):
         region (str): Region for generate resume
 
     """
-    util.init_logger(__name__)
-    util.get_logger().debug("Start executing capacity resume")
+    logger = logging.getLogger(__name__)
+    logger.debug("Start executing capacity resume")
 
     keys_volume_in_use_show = []
     darter_config = util.get_config("darter")
@@ -43,8 +43,9 @@ def resume(util, region):
 
     domains = Domain().find_all(region, True)
 
+    project = Project()
     for d in domains:
-        projects = Project().find_all(d.uuid, region)
+        projects = project.find_all(d.uuid, region)
         for p in projects:
             data['servers_total'] = data['servers_total'] + len(p.servers_ids)
             for k in p.volume_quotes.keys():
@@ -55,4 +56,4 @@ def resume(util, region):
                 data['cinder'][k] = data['cinder'][k] + p.volume_quotes[k]['in_use']
 
     data['memory_used'] = int(data['memory_used'] / 1024)
-    print(json.dumps(data, indent=4))
+    JsonWriter().write("capacity-resume", "capacity", data)

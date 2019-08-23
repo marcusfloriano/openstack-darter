@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import click
+import logging
 
 from darter.exceptions import DarterException
 from darter.commands.hypervisor_commands import sync as hypervisor_sync
@@ -17,15 +18,15 @@ def main():
 @click.pass_context
 def sync(ctx, region):
     """Sync is for get all info by region"""
-    ctx.obj.init_logger(__name__)
-    ctx.obj.get_logger().debug("Start sync on region: %s" % region)
+    logger = logging.getLogger(__name__)
+    logger.debug("Start sync on region: %s" % region)
 
     try:
         ctx.forward(hypervisor_sync)
         ctx.forward(domain_sync)
         ctx.forward(project_sync)
     except DarterException as e:
-        ctx.obj.get_logger().error(e)
+        logger.error(e)
 
-    ctx.obj.get_logger().debug("End sync on region: %s" % region)
+    logger.debug("End sync on region: %s" % region)
 

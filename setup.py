@@ -37,7 +37,8 @@ setup(name='openstack-darter',
           "terminaltables==3.1.0",
           "redis==2.10.6",
           "rq==0.10.0",
-          "rq-dashboard"
+          "rq-dashboard",
+          "flask==1.1.*"
       ],
       setup_requires=['pytest-runner', 'sphinxcontrib-napoleon'],
       tests_require=['pytest', 'pylint'],

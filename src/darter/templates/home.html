@@ -1,0 +1,27 @@
+{% extends "rq_dashboard/base.html" %}
+
+
+{% block content %}
+<div class="row" id="rq-instances-row">
+    <div class="span12">
+        <div class="section">
+            <h1>Openstack Darter</h1>
+            <p class="intro">This tool show info about capacity of openstack</p>
+            <p class="intro">
+                <a href="/rq/">For display the process of get capacity on OpenStack click here!</a>
+            </p>
+        </div>
+    </div>
+    <div class="span6">
+        <div class="section">
+            <h1>Compute in Use</h1>
+        </div>
+    </div>
+    <div class="span6">
+        <div class="section">
+            <h1>Volume in Use</h1>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
