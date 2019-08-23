@@ -85,11 +85,11 @@ class Project:
         self.servers_ids = []
 
     def find_all(self, domain_uuid, region):
-        # items = JsonReader("domain/%s" % region).reader("domain-%s" % domain_uuid, "projects")
+        items = JsonReader("domain/%s" % region).reader("domain-%s" % domain_uuid, "projects")
         projects = []
-        # project = Project()
-        # for item in items:
-        #     projects.append(project.from_json(item))
+        project = Project()
+        for item in items:
+            projects.append(project.from_json(item))
 
         def _sort(e):
             return e.name
