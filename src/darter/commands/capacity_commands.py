@@ -4,6 +4,7 @@ import click
 import logging
 
 from darter.models import Project, Domain, Hypervisor, JsonWriter
+from darter.views import HypervisorView, DomainView, ProjectView
 
 
 @click.group()
@@ -30,7 +31,7 @@ def resume(util, region):
     if 'cinder_keys_show' in darter_config:
         keys_volume_in_use_show = darter_config['cinder_keys_show']
 
-    hypervisors = Hypervisor().find_all(region)
+    hypervisors = HypervisorView().find_all(region)
     data = {
         'vcpus_used': 0,
         'memory_used': 0,
@@ -41,11 +42,10 @@ def resume(util, region):
         data['vcpus_used'] = data['vcpus_used'] + h.vcpus_used
         data['memory_used'] = data['memory_used'] + h.memory_used
 
-    domains = Domain().find_all(region, True)
+    domains = DomainView().find_all(region, True)
 
-    project = Project()
     for d in domains:
-        projects = project.find_all(d.uuid, region)
+        projects = ProjectView().find_all(d.uuid, region)
         for p in projects:
             data['servers_total'] = data['servers_total'] + len(p.servers_ids)
             for k in p.volume_quotes.keys():

@@ -42,7 +42,7 @@ def get_config():
         if os.path.exists(path):
             with open(path, 'r') as f:
                 return path, yaml.safe_load(f)
-    raise DarterException("Not load the config file, verify if files exists in %s." % self.filelist)
+    raise DarterException("Not load the config file, verify if files exists in %s." % CONFIG_FILES)
 
 
 config_filename, config = get_config()

@@ -5,6 +5,7 @@ import logging
 from darter.util import DarterUtil
 from darter.openstack_util import OpenstackUtil
 from darter.models import JsonWriter, Domain, Project
+from darter.views import ProjectView
 
 darter_util = DarterUtil()
 logger = logging.getLogger(__name__)
@@ -54,7 +55,7 @@ def get_total_servers(region: str, domain: Domain):
     logger.debug("Start processing get_total_servers")
     projects = []
     openstack_util = OpenstackUtil(region)
-    for p in Project().find_all(domain.uuid, region):
+    for p in ProjectView().find_all(domain.uuid, region):
         p.servers_ids = openstack_util.get_servers_ids(p.uuid)
         projects.append(p.to_json())
 

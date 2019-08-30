@@ -7,7 +7,7 @@ from darter.commands.hypervisor_commands import sync as hypervisor_sync
 from darter.commands.domain_commands import sync as domain_sync
 from darter.commands.project_commands import sync as project_sync
 from darter.commands.capacity_commands import resume
-from darter.models import Capacity
+from darter.views import CapacityView
 
 
 @click.group()

@@ -28,29 +28,6 @@ class Domain:
         self.name = name
         self.region = region
 
-    def find_all(self, region, all=False):
-        items = JsonReader().reader("domains-%s" % region, "domains")
-        domains = []
-        for item in items:
-            d = Domain().from_json(item)
-            projects = Project().find_all(d.uuid, region)
-            if all:
-                domains.append(Domain().from_json(item))
-            else:
-                for p in projects:
-                    if 'totalGigabytesUsed' in p.volume_quotes and p.volume_quotes['totalGigabytesUsed'] > 0:
-                        domains.append(Domain().from_json(item))
-                        break
-                    elif 'total_cores_used' in p.compute_quotes and p.compute_quotes['total_cores_used'] > 0:
-                        domains.append(Domain().from_json(item))
-                        break
-
-        def _sort(e):
-            return e.name
-
-        domains.sort(key=_sort)
-        return domains
-
     def to_json(self):
         return {
             'uuid': self.uuid,
@@ -84,26 +61,6 @@ class Project:
         self.compute_quotes = {}
         self.volume_quotes = {}
         self.servers_ids = []
-
-    def find_all(self, domain_uuid, region):
-        items = JsonReader("domain/%s" % region).reader("domain-%s" % domain_uuid, "projects")
-        projects = []
-        project = Project()
-        for item in items:
-            projects.append(project.from_json(item))
-
-        def _sort(e):
-            return e.name
-
-        projects.sort(key=_sort)
-        return projects
-
-    def find_by_id(self, domain_uuid, project_uuid, region):
-        projects = self.find_all(domain_uuid, region)
-        for p in projects:
-            if p.uuid == project_uuid:
-                return p
-        return None
 
     def to_json(self):
         return {
@@ -140,18 +97,6 @@ class Hypervisor:
         self.vcpus_used = vcpus_used
         self.memory_used = memory_used
 
-    def find_all(self, region):
-        items = JsonReader().reader("hypervisors-%s" % region, "hypervisors")
-        hypervisors = []
-        for item in items:
-            hypervisors.append(Hypervisor().from_json(item))
-
-        def _sort(e):
-            return e.uuid
-
-        hypervisors.sort(key=_sort)
-        return hypervisors
-
     def to_json(self):
         return {
             'uuid': self.uuid,
@@ -164,21 +109,6 @@ class Hypervisor:
         self.vcpus_used = data['vcpus_used']
         self.memory_used = data['memory_used']
         return self
-
-
-class Capacity:
-
-    def __init__(self):
-        self.util = DarterUtil()
-        self.data_store = self.util.get_store_data()
-
-    def find_all(self):
-        data = {}
-        for file in os.listdir(self.data_store):
-            if re.match("^capacity\-resume\-.*?\.json$", file):
-                content = JsonReader().reader(file.replace(".json",""), 'capacity')
-                data.update(content)
-        return data
 
 
 class DarterReaderWriter:
@@ -214,6 +144,7 @@ class JsonReader(DarterReaderWriter):
     """JsonReader is to reader json structs files"""
 
     def reader(self, file, name):
+        self.logger.debug("%s/%s.json" % (self.datafiles, file))
         with open("%s/%s.json" % (self.datafiles, file), 'r') as file:
             data = json.load(file)
             return data[name]

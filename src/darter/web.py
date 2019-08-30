@@ -1,6 +1,6 @@
 
 from flask import Blueprint, make_response, render_template, url_for
-from darter.models import Capacity
+from darter.views import CapacityView
 
 blueprint = Blueprint(
     'darter',
@@ -12,7 +12,7 @@ blueprint = Blueprint(
 
 @blueprint.route('/')
 def home():
-    capacity = Capacity().find_all()
+    capacity = CapacityView().find_all()
 
     r = make_response(render_template(
         'home.html',
