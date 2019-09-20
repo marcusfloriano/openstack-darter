@@ -71,7 +71,7 @@ class OpenstackUtil:
         self.logger.debug(quota_volume)
         for q in self.quota_usage_show(quota_volume):
             project.volume_quotes[q['Type']] = {
-                'limit': q['Type'],
+                'limit': q['Limit'],
                 'in_use': q['In_use']
             }
         return project

@@ -20,10 +20,16 @@
             <table id="compute" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Region</th>
-                        <th>Servers Totals</th>
-                        <th>vCPUs Used</th>
-                        <th>Memory Used</th>
+                        <th rowspan="2">Region</th>
+                        <th rowspan="2">Servers Totals</th>
+                        <th colspan="2">vCPUs</th>
+                        <th colspan="2">Memory</th>
+                    </tr>
+                    <tr>
+                        <th style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;">Used</th>
+                        <th style="border-top: 1px solid #ddd;">Total</th>
+                        <th style="border-top: 1px solid #ddd;">Used</th>
+                        <th style="border-top: 1px solid #ddd;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,7 +38,9 @@
                         <td>{{region}}</td>
                         <td>{{capacity[region]['servers_total']}}</td>
                         <td>{{capacity[region]['vcpus_used']}}</td>
+                        <td>{{capacity[region]['vcpus_size']}}</td>
                         <td>{{capacity[region]['memory_used']}}</td>
+                        <td>{{capacity[region]['memory_size']}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -58,7 +66,7 @@
                     <tr>
                         <td>{{region}}</td>
                         <td>{{type}}</td>
-                        <td>{{capacity[region]['cinder'][type]}}</td>
+                        <td>{{capacity[region]['cinder'][type]['in_use']}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
