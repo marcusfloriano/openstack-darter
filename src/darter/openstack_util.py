@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import openstack.cloud
 import logging
+import json
 
 from darter.models import Domain, Project, Hypervisor
 from darter.util import DarterUtil
@@ -26,7 +27,8 @@ class OpenstackUtil:
     def get_hypervisors(self):
         hypervisors = []
         for h in self.conn.list_hypervisors():
-            hypervisors.append(Hypervisor(h['id'], h['vcpus_used'], h['memory_used']).to_json())
+            self.logger.debug(json.dumps(h, indent=4))
+            hypervisors.append(Hypervisor(h['id'], h['vcpus_used'], h['memory_used'], h['vcpus'], h['memory_size']).to_json())
         return hypervisors
 
     def get_domains(self):
@@ -54,7 +56,7 @@ class OpenstackUtil:
     def get_compute_totals(self, project: Project):
         self.logger.debug("get_compute_totals for %s" % project.name)
         quota = self.conn.get_compute_limits(name_or_id=project.uuid)
-
+        self.logger.debug(json.dumps(quota, indent=4))
         project.compute_quotes = {
             'total_cores_used': quota.total_cores_used,
             'total_instances_used': quota.total_instances_used,

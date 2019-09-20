@@ -92,22 +92,28 @@ class Hypervisor:
         memory_used (int): memory used by hypervisor
     """
 
-    def __init__(self, uuid=None, vcpus_used=None, memory_used=None):
+    def __init__(self, uuid=None, vcpus_used=None, memory_used=None, vcpus_size=None, memory_size=None):
         self.uuid = uuid
         self.vcpus_used = vcpus_used
         self.memory_used = memory_used
+        self.vcpus_size = vcpus_size
+        self.memory_size = memory_size
 
     def to_json(self):
         return {
             'uuid': self.uuid,
             'vcpus_used': self.vcpus_used,
-            'memory_used': self.memory_used
+            'memory_used': self.memory_used,
+            'vcpus_size': self.vcpus_size,
+            'memory_size': self.memory_size
         }
 
     def from_json(self, data):
         self.uuid = data['uuid']
         self.vcpus_used = data['vcpus_used']
         self.memory_used = data['memory_used']
+        self.vcpus_size = data['vcpus_size']
+        self.memory_size = data['memory_size']
         return self
 
 
