@@ -2,6 +2,28 @@
 
 
 {% block content %}
+
+<style>
+    #compute thead tr th {
+        text-align: center;
+        background: #cccccc;
+    }
+    #compute tbody tr td {
+        text-align: right;
+        padding-right: 20px;
+    }
+    #compute tbody tr>td:first-child {
+        text-align: center;
+    }
+    #volume thead tr th {
+        background: #cccccc;
+    }
+    #volume .value {
+        text-align: right;
+        padding-right: 20px;
+    }
+</style>
+
 <div class="row" id="rq-instances-row">
     <div class="span12">
         <div class="section">
@@ -12,7 +34,7 @@
             </p>
         </div>
     </div>
-    <div class="span6">
+    <div class="span12">
         <div class="section">
             <h1>Compute in Use</h1>
         </div>
@@ -21,33 +43,52 @@
                 <thead>
                     <tr>
                         <th rowspan="2">Region</th>
-                        <th rowspan="2">Servers Totals</th>
-                        <th colspan="2">vCPUs</th>
-                        <th colspan="2">Memory</th>
+                        <th rowspan="2">Servers</th>
+
+                        <th colspan="2">Hypervisor vCPUs</th>
+                        <th colspan="2">Instances vCPUs</th>
+
+                        <th colspan="2">Hypervisor Memory</th>
+                        <th colspan="2">Instances Memory</th>
+
                     </tr>
                     <tr>
                         <th style="border-left: 1px solid #ddd; border-top: 1px solid #ddd;">Used</th>
                         <th style="border-top: 1px solid #ddd;">Total</th>
                         <th style="border-top: 1px solid #ddd;">Used</th>
+                        <th style="border-top: 1px solid #ddd;">Quote</th>
+                        <th style="border-top: 1px solid #ddd;">Used</th>
                         <th style="border-top: 1px solid #ddd;">Total</th>
+                        <th style="border-top: 1px solid #ddd;">Used</th>
+                        <th style="border-top: 1px solid #ddd;">Quote</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for region in regions %}
                     <tr>
                         <td>{{region}}</td>
-                        <td>{{capacity[region]['servers_total']}}</td>
-                        <td>{{capacity[region]['vcpus_used']}}</td>
-                        <td>{{capacity[region]['vcpus_size']}}</td>
-                        <td>{{capacity[region]['memory_used']}}</td>
-                        <td>{{capacity[region]['memory_size']}}</td>
+                        <td>{{ "{:,.0f}".format(capacity[region]['servers_total']) }}</td>
+
+                        <td>{{ "{:,.0f}".format(capacity[region]['vcpus_used']) }}</td>
+                        <td>{{ "{:,.0f}".format(capacity[region]['vcpus_size']) }}</td>
+                        <td>{{ "{:,.0f}".format(capacity[region]['projects']['vcpus_used']) }}</td>
+                        <td style="color:{{capacity[region]['projects']['vcpus_size_color']}}">
+                            {{ "{:,.0f}".format(capacity[region]['projects']['vcpus_size']) }}
+                        </td>
+
+                        <td>{{ "{:,.0f}".format(capacity[region]['memory_used']) }}</td>
+                        <td>{{ "{:,.0f}".format(capacity[region]['memory_size']) }}</td>
+                        <td>{{ "{:,.0f}".format(capacity[region]['projects']['memory_used']) }}</td>
+                        <td style="color:{{capacity[region]['projects']['memory_size_color']}}">
+                            {{ "{:,.0f}".format(capacity[region]['projects']['memory_size']) }}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="span6">
+    <div class="span12">
         <div class="section">
             <h1>Volume in Use</h1>
         </div>
@@ -66,7 +107,7 @@
                     <tr>
                         <td>{{region}}</td>
                         <td>{{type}}</td>
-                        <td>{{capacity[region]['cinder'][type]['in_use']}}</td>
+                        <td class="value">{{ "{:,.0f}".format(capacity[region]['cinder'][type]['in_use']) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
