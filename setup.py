@@ -35,7 +35,7 @@ setup(name='openstack-darter',
           "openstacksdk==0.31.2",
           "python-cinderclient==4.2.1",
           "terminaltables==3.1.0",
-          "redis==2.10.6",
+          "redis==4.5.3",
           "rq==0.10.0",
           "rq-dashboard",
           "flask==1.1.*"
